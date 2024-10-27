@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:33:58 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/27 18:32:23 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/27 18:35:04 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,11 @@ void ft_simulation(t_philo *philo)
 		}
 		if (!philo->data->death_flag && !philo->death_flag)
 		{
-			printf("----------------------------------------------------------------------\ndeath flag 1: [%d]\n----------------------------------------------------------------------\n", philo->data->death_flag);
+			printf("------------------------------------\ndeath flag 1: [%d]\n------------------------------------\n", philo->data->death_flag);
 			pthread_mutex_lock(&philo->data->fork[philo->sc_fork]);
 			// printf("----------------------------------------------------------------------\ndeath flag : [%d]\n----------------------------------------------------------------------\n", philo->data->death_flag);
 			printf("%lld %d has taken a fork 2\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
-			printf("----------------------------------------------------------------------\ndeath flag 2: [%d]\n----------------------------------------------------------------------\n", philo->data->death_flag);
+			printf("------------------------------------\ndeath flag 2: [%d]\n------------------------------------\n", philo->data->death_flag);
 		}
 		if (!philo->data->death_flag && !philo->death_flag)
 		{
