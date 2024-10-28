@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:33:58 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/28 09:08:21 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/28 09:50:06 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,10 @@ void ft_simulation(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->death_flag_lock);
 		pthread_mutex_lock(&philo->data->fork[philo->ft_fork]);
 		if (!philo->data->death_flag)
-			printf("%lld %d has taken a fork 1\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
+			printf("%lld %d has taken a fork\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
 		pthread_mutex_lock(&philo->data->fork[philo->sc_fork]);
 			if (!philo->data->death_flag)
-				printf("%lld %d has taken a fork 2\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
+				printf("%lld %d has taken a fork\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
 		if (!philo->data->death_flag )
 			printf("%lld %d is eating\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
 		ft_sleep(philo->data->time_to_eat, philo);
@@ -212,7 +212,7 @@ void	*monitor_routine(void *arg)
 				pthread_mutex_unlock(&data->death_flag_lock);
 				data->death_id = data->philo[i].id;
 				pthread_mutex_lock(&data->print_lock);
-				printf("%lld %d is died\n", data->death_time, data->death_id);
+				printf("%lld %d died\n", data->death_time, data->death_id);
 				pthread_mutex_unlock(&data->print_lock);
 				pthread_mutex_unlock(&data->eat_time_lock);
 				return NULL;
