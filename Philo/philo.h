@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:53:34 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/28 13:06:48 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/28 18:24:27 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define EAT "is eating"
 # define SLP "is sleeping"
 # define TNK "is thinking"
+
 typedef enum e_state
 {
 	ALIVE,
@@ -72,9 +73,11 @@ struct s_philo
 	t_data				*data;
 };
 
-long long	get_time_of_day(int type);
-long long	ft_atol(char *src);
-void	ft_putstr_fd(char *s, int fd);
-long long	get_time_of_day(int type);
+void			ft_sleep(long long time, t_philo *philo);
+void			ft_putstr_fd(char *s, int fd);
+long long		get_time_of_day(int type);
+long long		ft_atol(char *src);
+int				ft_parsing(t_data **data, char **av);
+void			*routine(void *arg);
 
 #endif

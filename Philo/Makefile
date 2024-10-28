@@ -3,7 +3,7 @@ CFLAGS		=	-Wall -Wextra -Werror
 # CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=thread
 # CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address
 NAME		=	philo
-SRC			=	philo.c utils.c\
+SRC			=	philo.c utils.c routine.c parsing.c\
 
 OBJS		=	$(SRC:.c=.o)
 
