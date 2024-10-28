@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:53:34 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/26 16:07:07 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/28 11:37:10 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 # include <libc.h>
 # include <sys/time.h>
 
-
+# define FORK "has taken a fork"
+# define EAT "is eating"
+# define SLP "is sleeping"
+# define TNK "is thinking"
 typedef enum e_state
 {
 	ALIVE,
@@ -49,6 +52,7 @@ struct s_data
 	pthread_mutex_t		death_flag_lock;
 	pthread_mutex_t		eat_time_lock;
 	pthread_mutex_t		print_lock;
+	pthread_mutex_t		meals_lock;
 	pthread_mutex_t		*fork;
 };
 
