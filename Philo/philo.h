@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:53:34 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/28 11:37:10 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/28 13:06:48 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ struct s_data
 	int					death_id;
 	long long			start_time;
 	int					eat_time;
+	int					meals_complet;
 	t_philo				*philo;
 	pthread_mutex_t		death_flag_lock;
 	pthread_mutex_t		eat_time_lock;
