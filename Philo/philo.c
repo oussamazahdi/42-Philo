@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:33:58 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/27 18:35:04 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/10/28 09:08:21 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,17 @@ int	ft_parsing(t_data **data, char **av)
 	(*data)->start_time = get_time_of_day(MILLI);
 	return (0);
 }
-void ft_sleep(long long time)
+void ft_sleep(long long time, t_philo *philo)
 {
 	long long	start;
 
 	start = get_time_of_day(MILLI);
 	while (get_time_of_day(MILLI) - start < time)
+	{
+		if (philo->data->death_flag)
+			return ;
 		usleep(100);
+	}
 }
 
 void	ft_print(t_philo *philo, long long time, int id, char *state)
@@ -146,44 +150,32 @@ void ft_simulation(t_philo *philo)
 	while (1)
 	{
 		pthread_mutex_lock(&philo->data->death_flag_lock);
-		if (philo->data->death_flag && !philo->death_flag)
+		if (philo->data->death_flag)
 		{
 			pthread_mutex_unlock(&philo->data->death_flag_lock);
 			break ;
 		}
 		pthread_mutex_unlock(&philo->data->death_flag_lock);
-		if (!philo->data->death_flag && !philo->death_flag)
-		{
-			pthread_mutex_lock(&philo->data->fork[philo->ft_fork]);
+		pthread_mutex_lock(&philo->data->fork[philo->ft_fork]);
+		if (!philo->data->death_flag)
 			printf("%lld %d has taken a fork 1\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
-		}
-		if (!philo->data->death_flag && !philo->death_flag)
-		{
-			printf("------------------------------------\ndeath flag 1: [%d]\n------------------------------------\n", philo->data->death_flag);
-			pthread_mutex_lock(&philo->data->fork[philo->sc_fork]);
-			// printf("----------------------------------------------------------------------\ndeath flag : [%d]\n----------------------------------------------------------------------\n", philo->data->death_flag);
-			printf("%lld %d has taken a fork 2\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
-			printf("------------------------------------\ndeath flag 2: [%d]\n------------------------------------\n", philo->data->death_flag);
-		}
-		if (!philo->data->death_flag && !philo->death_flag)
-		{
+		pthread_mutex_lock(&philo->data->fork[philo->sc_fork]);
+			if (!philo->data->death_flag)
+				printf("%lld %d has taken a fork 2\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
+		if (!philo->data->death_flag )
 			printf("%lld %d is eating\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
-			ft_sleep(philo->data->time_to_eat);
-			pthread_mutex_lock(&philo->data->eat_time_lock);
-			philo->last_eat_time = get_time_of_day(MILLI);
-			pthread_mutex_unlock(&philo->data->eat_time_lock);
-		}
+		ft_sleep(philo->data->time_to_eat, philo);
+		pthread_mutex_lock(&philo->data->eat_time_lock);
+		philo->last_eat_time = get_time_of_day(MILLI);
+		pthread_mutex_unlock(&philo->data->eat_time_lock);
 		pthread_mutex_unlock(&philo->data->fork[philo->ft_fork]);
 		pthread_mutex_unlock(&philo->data->fork[philo->sc_fork]);
-		if (!philo->data->death_flag && !philo->death_flag)
-		{
+		if (!philo->data->death_flag)
 			printf("%lld %d is sleeping\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
-			ft_sleep(philo->data->time_to_sleep);
-		}
-		if (!philo->data->death_flag && !philo->death_flag)
+		ft_sleep(philo->data->time_to_sleep, philo);
+		if (!philo->data->death_flag)
 			printf("%lld %d is thinking\n", get_time_of_day(MILLI) - philo->data->start_time, philo->id);
 	}
-	// printf("***** finish ***** [%d]\n", philo->id);
 }
 
 void *routine(void *arg)
@@ -214,10 +206,10 @@ void	*monitor_routine(void *arg)
 			if (data->philo[i].last_eat_time != 0 && get_time_of_day(MILLI) - data->philo[i].last_eat_time >= data->time_to_die)
 			{
 				pthread_mutex_lock(&data->death_flag_lock);
+				data->death_time = get_time_of_day(MILLI) - data->start_time;
 				data->death_flag = 1;
 				// data->philo[i].death_flag = 1;
 				pthread_mutex_unlock(&data->death_flag_lock);
-				data->death_time = get_time_of_day(MILLI) - data->start_time;
 				data->death_id = data->philo[i].id;
 				pthread_mutex_lock(&data->print_lock);
 				printf("%lld %d is died\n", data->death_time, data->death_id);
