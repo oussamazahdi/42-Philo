@@ -1,9 +1,7 @@
 CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror
-# CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=thread
-# CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address
 NAME		=	philo
-SRC			=	philo.c utils.c routine.c parsing.c\
+SRC			=	philo.c utils.c routine.c parsing.c utiles2.c\
 
 OBJS		=	$(SRC:.c=.o)
 

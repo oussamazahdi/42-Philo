@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:33:58 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/28 18:24:06 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/11/02 11:49:16 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,17 @@ int	ft_check_meals(t_data *data, int i)
 	pthread_mutex_lock(&data->meals_lock);
 	if (data->number_of_meals > 0 && \
 		data->philo[i].ph_number_of_meals >= data->number_of_meals)
-	{
 		data->philo[i].death_flag = 1;
-		while (++n < data->number_of_philosophers)
-			if (data->philo[n].death_flag != 1)
-				break ;
-		if (n == data->number_of_philosophers)
-		{
-			pthread_mutex_unlock(&data->meals_lock);
-			return (data->meals_complet = 1, 1);
-		}
+	while (++n < data->number_of_philosophers)
+		if (data->philo[n].death_flag != 1)
+			break ;
+	if (n == data->number_of_philosophers)
+	{
+		pthread_mutex_unlock(&data->meals_lock);
+		pthread_mutex_lock(&data->n_meals_lock);
+		data->meals_complet = 1;
+		pthread_mutex_unlock(&data->n_meals_lock);
+		return (1);
 	}
 	pthread_mutex_unlock(&data->meals_lock);
 	return (0);
@@ -54,19 +55,18 @@ void	*monitor_routine(void *arg)
 		i = -1;
 		while (++i < data->number_of_philosophers)
 		{
-			if (ft_check_meals(data, i) == 1)
-				return (NULL);
 			pthread_mutex_lock(&data->eat_time_lock);
 			if ((data->philo[i].last_eat_time != 0 && get_time_of_day(MILLI) \
-				- data->philo[i].last_eat_time > data->time_to_die - 1))
+				- data->philo[i].last_eat_time > data->time_to_die))
 			{
 				ft_convert_death_flag(data);
 				data->death_id = data->philo[i].id;
-				printf("%lld %d died\n", data->death_time, data->death_id);
-				pthread_mutex_unlock(&data->eat_time_lock);
+				ft_die_print(data, data->death_time, data->death_id);
 				return (NULL);
 			}
 			pthread_mutex_unlock(&data->eat_time_lock);
+			if (ft_check_meals(data, i) == 1)
+				return (NULL);
 		}
 	}
 	return (NULL);
@@ -104,4 +104,5 @@ int	main(int ac, char **av)
 	monitor_thread(&data);
 	while (++i < data->number_of_philosophers)
 		pthread_join(data->philo[i].philo, NULL);
+	return (ft_close_all(data));
 }

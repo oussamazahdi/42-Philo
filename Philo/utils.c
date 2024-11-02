@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:37:35 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/10/28 18:25:07 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/11/02 12:41:01 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,6 @@ void	ft_sleep(long long time, t_philo *philo)
 	}
 }
 
-long long	ft_atol(char *src)
-{
-	long long	result;
-	long long	i;
-
-	result = 0;
-	i = 0;
-	while (src[i])
-	{
-		if (src[i] >= '0' && src[i] <= '9')
-			i++;
-		else
-			return (-1);
-	}
-	while (*src && *src >= '0' && *src <= '9')
-	{
-		result *= 10;
-		result += *src++ - '0';
-	}
-	if (result > 2147483647)
-		return (-1);
-	return (result);
-}
-
 void	ft_putstr_fd(char *s, int fd)
 {
 	if (!s)
@@ -74,5 +50,25 @@ long long	get_time_of_day(int type)
 		return (tv.tv_sec * 1000 + (tv.tv_usec) / 1000);
 	else if (type == MACRO)
 		return (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (0);
+}
+
+int	ft_close_all(t_data *data)
+{
+	int		i;
+
+	i = -1;
+	if (pthread_mutex_destroy(&data->death_flag_lock))
+		return (ft_putstr_fd("Error: Mutex destroying error!\n", 2), 1);
+	if (pthread_mutex_destroy(&data->eat_time_lock))
+		return (ft_putstr_fd("Error: Mutex destroying error!\n", 2), 1);
+	if (pthread_mutex_destroy(&data->meals_lock))
+		return (ft_putstr_fd("Error: Mutex destroying error!\n", 2), 1);
+	while (++i < data->number_of_philosophers)
+		if (pthread_mutex_destroy(&data->fork[i]))
+			return (ft_putstr_fd("Error: Mutex destroying error!\n", 2), 1);
+	free(data->fork);
+	free(data->philo);
+	free(data);
 	return (0);
 }
