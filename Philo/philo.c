@@ -6,7 +6,7 @@
 /*   By: ozahdi <ozahdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:33:58 by ozahdi            #+#    #+#             */
-/*   Updated: 2024/11/02 11:49:16 by ozahdi           ###   ########.fr       */
+/*   Updated: 2024/11/03 09:27:19 by ozahdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	main(int ac, char **av)
 	if (!data)
 		return (ft_putstr_fd("Error: Memory allocation error\n", 2), 1);
 	if (ft_parsing(&data, av))
-		return (1);
+		return (free(data), 1);
 	i = -1;
 	data->start_time = get_time_of_day(MILLI);
 	while (++i < data->number_of_philosophers)
